@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import './ContactData.dart';
 class EditContact extends StatefulWidget{
    final ContactData  namelist;
-   EditContact({Key key,@required this.namelist}): super(key: key);
+   final Function(ContactData) editContact;
+   EditContact({Key key,@required this.namelist,@required this.editContact}): super(key: key);
   //final Function(ContactData) addNewContact;
   //Contact({Key key,@required this.addNewContact}): super(key: key);
 
@@ -23,7 +24,7 @@ class _ContactFormState extends State<EditContact>{
     if (form.validate()) {
       form.save(); // Save our form now.
 
-      //widget.addNewContact(_data);
+      widget.editContact(_data);
       print('Email: ${_data.email}');
       print('Name: ${_data.name}');
       Navigator.of(context).pop();
@@ -33,6 +34,7 @@ class _ContactFormState extends State<EditContact>{
 
   @override
   Widget build(BuildContext context){
+    this._data.name=widget.namelist.name;
     return new Scaffold(
       body:new SingleChildScrollView(
         child:new Form(key: this._formKey,
@@ -42,12 +44,7 @@ class _ContactFormState extends State<EditContact>{
                 new Image.asset('Assets/Add-Male-User.png'),
                 new ListTile(
                   leading: const Icon(Icons.person),
-                  title: new TextFormField(
-                      initialValue: widget.namelist.name,
-                      onSaved: (String value) {
-                        this._data.name = value;
-                      }
-                  ),
+                  title: new Text('${widget.namelist.name}'),
                 ),
                 new ListTile(
                   leading: const Icon(Icons.work),
@@ -97,7 +94,7 @@ class _ContactFormState extends State<EditContact>{
                 ),
                 new ListTile(
                   title: new RaisedButton(
-                    onPressed:null ,
+                    onPressed:()=>(submit()) ,
                     child: new Text(
                       'Save',
                       style: new TextStyle(

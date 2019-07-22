@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import './Contact.dart';
-import './ContactData.dart';
 import './EditContact.dart';
+import './ContactData.dart';
 main()=>runApp(new MaterialApp(
   home: new AppHome(),
 ));
@@ -32,6 +32,17 @@ class AppState extends State<AppHome>{
       names.add(new ContactData('${_data.name}','${_data.designation}','${_data.company}','${_data.phone}','${_data.email}','${_data.place}') );
     });
   }
+
+  void editContact(ContactData _data)
+  {
+    final tile = names.firstWhere((item) => item.name == _data.name);
+    setState(() {tile.designation = _data.designation;
+                 tile.company=_data.company;
+                  tile.phone=_data.phone;
+                   tile.email=_data.email;
+                    tile.place=_data.place;});
+  }
+
   void _pushAddScreen() {
     // Push this page onto the stack
     Navigator.of(context).push(
@@ -60,7 +71,7 @@ class AppState extends State<AppHome>{
       body: new Container(
           child:ListView.builder(
           reverse: false,
-          itemBuilder: (_,int index)=>EachList(this.names[index]),
+          itemBuilder: (_,int index)=>EachList(this.names[index],this.editContact),
           itemCount: this.names.length,
         ),
       ),
@@ -74,23 +85,39 @@ class AppState extends State<AppHome>{
 }
 class EachList extends StatelessWidget{
   final ContactData list;
-  EachList(this.list);
+  final Function(ContactData) editContact;
+  EachList(this.list,this.editContact);
   @override
   Widget build(BuildContext context) {
-    return new Card(
-      child: new Container(
-        padding: EdgeInsets.all(8.0),
-        child: new Row(
+    return new GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return new Scaffold(
+                appBar: new AppBar(
+                    title: new Text('Add a new Contact')
+                ),
+                body:EditContact(namelist: list,editContact: editContact,),
+              );
+            },
+          ),
+        );
+      },
+        child:new Card(
+          child: new Container(
+            padding: EdgeInsets.all(8.0),
+            child: new Row(
 
-
-              children: <Widget>[
-                new CircleAvatar(child: new Text(list.name[0]),),
-                new Padding(padding: EdgeInsets.only(right: 10.0)),
-                new Text(list.name,style: TextStyle(fontSize: 20.0),)
-              ],
-
+               children: <Widget>[
+                 new CircleAvatar(child: new Text(list.name[0]),),
+                 new Padding(padding: EdgeInsets.only(right: 10.0)),
+                 new Text(list.name,style: TextStyle(fontSize: 20.0),)
+          ],
         ),
-      ),
+        ),
+        ),
     );
   }
 
