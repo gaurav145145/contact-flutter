@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import './Contact.dart';
 import './ContactData.dart';
+import './EditContact.dart';
 main()=>runApp(new MaterialApp(
   home: new AppHome(),
 ));
@@ -24,8 +25,9 @@ class AppState extends State<AppHome>{
     super.initState();
   }
 
-  void _addNewContact(ContactData _data)
+  void addNewContact(ContactData _data)
   {
+    print("gau");
     setState((){
       names.add(new ContactData('${_data.name}','${_data.designation}','${_data.company}','${_data.phone}','${_data.email}','${_data.place}') );
     });
@@ -41,7 +43,7 @@ class AppState extends State<AppHome>{
                   appBar: new AppBar(
                       title: new Text('Add a new Contact')
                   ),
-                  body: Contact(names),
+                  body: Contact(addNewContact:addNewContact),
               );
             }
         )
@@ -79,11 +81,14 @@ class EachList extends StatelessWidget{
       child: new Container(
         padding: EdgeInsets.all(8.0),
         child: new Row(
-          children: <Widget>[
-            new CircleAvatar(child: new Text(list.name[0]),),
-            new Padding(padding: EdgeInsets.only(right: 10.0)),
-            new Text(list.name,style: TextStyle(fontSize: 20.0),)
-          ],
+
+
+              children: <Widget>[
+                new CircleAvatar(child: new Text(list.name[0]),),
+                new Padding(padding: EdgeInsets.only(right: 10.0)),
+                new Text(list.name,style: TextStyle(fontSize: 20.0),)
+              ],
+
         ),
       ),
     );

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import './ContactData.dart';
 class Contact extends StatefulWidget{
-
-  final List<ContactData>
-  Contact(this._addNewContact);
+   // final List<ContactData>  namelist;
+   // Contact({Key key,@required this.namelist}): super(key: key);
+  final Function(ContactData) addNewContact;
+  Contact({Key key,@required this.addNewContact}): super(key: key);
 
   @override
   State<Contact> createState() {
-    print(_addNewContact);
     return new _ContactFormState();
   }
 }
@@ -15,18 +15,18 @@ class Contact extends StatefulWidget{
 class _ContactFormState extends State<Contact>{
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  ContactData _data;
+  ContactData _data=new ContactData('','','','','','') ;
 
   void submit() {
-    // First validate form.
-    print('Email:');
-    if (this._formKey.currentState.validate()) {
-      _formKey.currentState.save(); // Save our form now.
+    final form = _formKey.currentState;
 
-     widget._addNewContact(_data);
+    if (form.validate()) {
+     form.save(); // Save our form now.
 
+      widget.addNewContact(_data);
       print('Email: ${_data.email}');
       print('Name: ${_data.name}');
+      Navigator.of(context).pop();
     }
   }
 
@@ -109,7 +109,7 @@ class _ContactFormState extends State<Contact>{
           ),
            new ListTile(
              title: new RaisedButton(
-               onPressed:()=> submit() ,
+               onPressed:()=>(submit()) ,
                child: new Text(
                    'Save',
                  style: new TextStyle(
